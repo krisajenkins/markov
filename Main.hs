@@ -1,10 +1,5 @@
--- OverloadedStrings, OverloadedLists
-
 module Main where
 
--- HLearn
---import qualified Data.Vector as Vector
---import qualified Data.Text as Text
 import qualified Data.Map as Map
 import           System.Random
 
