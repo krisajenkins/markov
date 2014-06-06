@@ -18,11 +18,21 @@ oneOf xs g =
 addHeadAndTail :: a -> a -> [a] -> [a]
 addHeadAndTail h t xs = [h] ++ xs ++ [t]
 
+pairs :: [a] -> [(a,a)]
+pairs [] = []
+pairs [x,y] = [(x,y)]
+pairs (x:y:xs) = (x,y) : pairs(y:xs)
+
+consValue :: Ord a => Map.Map a [b] -> a -> b -> Map.Map a [b]
+consValue m x y = Map.insert x (y:Map.findWithDefault [] x m) m
+
+addLink :: Ord a => Map.Map a [b] -> (a,b) -> Map.Map a [b]
+addLink t (x,y) = consValue t x y
+
 addChain :: Ord a => Tree a -> [Maybe a] -> Tree a
-addChain t [] = t
-addChain t [x,y] = Map.insert x (y:ys) t
-  where ys = Map.findWithDefault [] x t
-addChain t (x:y:xs) = addChain (addChain t [x,y]) (y:xs)
+addChain t xs = foldl addLink t (pairs xs)
+
+--
 
 readChainStep :: (Ord a, RandomGen g) => Tree a -> (Maybe a, g) -> [a]
 readChainStep _ (Nothing, g) = []
@@ -37,17 +47,10 @@ readChain t g =
                      Nothing -> (Nothing, g)
                      Just ws -> oneOf ws g)
 
-text :: [String]
-text = ["shakespeare was born and brought up in stratford-upon-avon",
-        "at the age of 18 he married anne hathaway with whom he had three children",
-        "susanna and twins hamnet and judith",
-        "between 1585 and 1592 he began a successful career in london as an actor writer and part-owner of a playing company called the lord chamberlains men later known as the kings men",
-        "he appears to have retired to stratford around 1613 at age 49 where he died three years later",
-        "few records of shakespeares private life survive and there has been considerable speculation about such matters as his physical appearance sexuality religious beliefs and whether the works attributed to him were written by others"]
-
 main :: IO ()
 main = do
+  text <- readFile "corpus.txt"
+  let digested = fmap (addHeadAndTail Nothing Nothing . fmap Just . words) (lines text)
+      tree = foldl addChain Map.empty digested
   g <- getStdGen
   print $ unwords $ readChain tree g
-  where digested = fmap (addHeadAndTail Nothing Nothing . fmap Just . words) text
-        tree = foldl addChain Map.empty digested
