@@ -19,14 +19,11 @@ pairs [_] = []
 pairs [x,y] = [(x,y)]
 pairs (x:y:xs) = (x,y) : pairs(y:xs)
 
-consValue :: Ord a => Map.Map a [b] -> a -> b -> Map.Map a [b]
-consValue m x y = Map.insert x (y:Map.findWithDefault [] x m) m
-
-addLink :: Ord a => Map.Map a [b] -> (a,b) -> Map.Map a [b]
-addLink t (x,y) = consValue t x y
+addPair :: Ord a => Map.Map a [b] -> (a,b) -> Map.Map a [b]
+addPair t (x,y) = Map.insert x (y:Map.findWithDefault [] x t) t
 
 addChain :: Ord a => Tree a -> [Maybe a] -> Tree a
-addChain t xs = foldl addLink t (pairs xs)
+addChain t xs = foldl addPair t (pairs xs)
 
 --
 
