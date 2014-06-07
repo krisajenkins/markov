@@ -15,6 +15,7 @@ addHeadAndTail h t xs = [h] ++ xs ++ [t]
 
 pairs :: [a] -> [(a,a)]
 pairs [] = []
+pairs [_] = []
 pairs [x,y] = [(x,y)]
 pairs (x:y:xs) = (x,y) : pairs(y:xs)
 
@@ -30,7 +31,7 @@ addChain t xs = foldl addLink t (pairs xs)
 --
 
 readChainStep :: (Ord a, RandomGen g) => Tree a -> (Maybe a, g) -> [a]
-readChainStep _ (Nothing, g) = []
+readChainStep _ (Nothing, _) = []
 readChainStep t (Just w, g) =
   case Map.lookup (Just w) t of
        Nothing -> []
