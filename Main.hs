@@ -40,10 +40,13 @@ readChain t g =
                      Nothing -> (End, g)
                      Just ws -> oneOf ws g)
 
+lineToSentence :: String -> [Node String]
+lineToSentence = addHeadAndTail Start End . fmap Node . words
+
 main :: IO ()
 main = do
   text <- readFile "corpus.txt"
-  let digested = fmap (addHeadAndTail Start End . fmap Node . words) (lines text)
-      tree = foldl addChain Map.empty digested
+  let sentences = fmap lineToSentence $ lines text
+      tree = foldl addChain Map.empty sentences
   g <- getStdGen
   print $ unwords $ readChain tree g
