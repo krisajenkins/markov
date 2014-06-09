@@ -2,6 +2,8 @@ module Main where
 
 import qualified Data.Map as Map
 import           System.Random
+import Data.Monoid
+import Control.Applicative
 
 data Node a = Node a | Start | End deriving (Eq, Ord, Show)
 type Graph a = Map.Map (Node a) [Node a]
