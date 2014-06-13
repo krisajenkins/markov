@@ -6,7 +6,7 @@ version:             0.1.0.0
 -- synopsis:
 -- description:
 -- license:
-license-file:        LICENSE
+license-file:        LICENSE.txt
 author:              Kris Jenkins
 maintainer:          krisajenkins@gmail.com
 -- copyright:
@@ -20,7 +20,9 @@ executable markov
   -- other-modules:
   -- other-extensions:
   build-depends:       random >= 1.0.1.1,
-                       base >=4.7 && <4.8
-  build-depends:       containers >=0.5 && <0.6
+                       base >= 4.7 && < 4.8,
+                       containers >= 0.5 && < 0.6,
+                       semigroups >= 0.8 && < 0.9
   -- hs-source-dirs:
   default-language:    Haskell2010
+  Ghc-Options:         -Wall
